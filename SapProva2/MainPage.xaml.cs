@@ -14,7 +14,7 @@ namespace SapProva2
     {
         Device device = new Device();
         Uri uri = new Uri(
-                    "https://iotmmsp1941683943trial.hanatrial.ondemand.com/com.sap.iotservices.mms/v1/api/http/data/1764772f-f48c-43b8-8186-ff41348d7796");
+                    "https://iotmmspXXXXXtrial.hanatrial.ondemand.com/com.sap.iotservices.mms/v1/api/http/data/XXXXX");
 
         public MainPage()
         {
@@ -42,14 +42,14 @@ namespace SapProva2
 
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "bdb31fd4655dcf1ef85823d59ba92fc");
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "XXXXX");
 
             //Find unix timestamp (seconds since 01/01/1970)
             var ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
             ticks /= 10000000; //Convert windows ticks to seconds
 
             var postData =
-                "{\"mode\":\"async\",\"messageType\":\"0c6c466ffd27fb36d0ce\",\"messages\":[{\"sensor\": \"1\",\"value\":" +temp+ ",\"timestamp\":" +ticks+ "}]}";
+                "{\"mode\":\"async\",\"messageType\":\"XXXXX\",\"messages\":[{\"sensor\": \"1\",\"value\":" +temp+ ",\"timestamp\":" +ticks+ "}]}";
             var content = new HttpStringContent(postData, Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
             var postResult = await httpClient.PostAsync(uri, content);
 
@@ -73,7 +73,7 @@ namespace SapProva2
         private async void Poll()
         {
             var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "bdb31fd4655dcf1ef85823d59ba92fc");
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + "XXXXX");
             var response = await httpClient.GetAsync(uri);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
