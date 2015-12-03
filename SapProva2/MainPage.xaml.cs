@@ -22,13 +22,11 @@ namespace SapProva2
            
             device.InitGPIO();
             device.InitSPI();
-            if (device.Pin != null)
-            {
-                var timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromMilliseconds(5000);
-                timer.Tick += Timer_Tick;
-                timer.Start();
-            }
+            if (device.Pin == null) return;
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(5000);
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
         private void Timer_Tick(object sender, object e)
@@ -38,7 +36,6 @@ namespace SapProva2
         }
 
         
-
         private async void Send()
         {
             var temp = device.Result();
@@ -71,7 +68,6 @@ namespace SapProva2
             {
                 Debug.WriteLine("Exception when sending message:" + e.Message);
             }
-
         }
 
         private async void Poll()
@@ -82,24 +78,22 @@ namespace SapProva2
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             var result = responseBody.Equals("[]", StringComparison.Ordinal);
-            if (result != true)
-            {
-                var jsonObject = JsonConvert.DeserializeObject<List<RootObject>>(responseBody); 
+            if (result) return;
+            var jsonObject = JsonConvert.DeserializeObject<List<RootObject>>(responseBody); 
                 
-                foreach (var post in jsonObject)
+            foreach (var post in jsonObject)
+            {
+                Debug.WriteLine(post.Messages[0].Operand);
+                var ledValue = post.Messages[0].Operand;
+                if (ledValue == 0)
                 {
-                    Debug.WriteLine(post.Messages[0].Operand);
-                    var ledValue = post.Messages[0].Operand;
-                    if (ledValue == 0)
-                    {
-                        device.PinValue = GpioPinValue.Low;
-                        device.Pin.Write(device.PinValue);
-                    }
-                    else
-                    {
-                        device.PinValue = GpioPinValue.High;
-                        device.Pin.Write(device.PinValue);
-                    }
+                    device.PinValue = GpioPinValue.Low;
+                    device.Pin.Write(device.PinValue);
+                }
+                else
+                {
+                    device.PinValue = GpioPinValue.High;
+                    device.Pin.Write(device.PinValue);
                 }
             }
         }

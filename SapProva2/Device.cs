@@ -4,6 +4,7 @@ using Windows.Devices.Gpio;
 using Windows.Devices.Spi;
 using Windows.Devices.Enumeration;
 
+
 namespace SapProva2
 {
     public class Device
